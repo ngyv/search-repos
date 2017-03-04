@@ -4,8 +4,9 @@
   "description": "Application that searches repositories using a keyword",
   "main": "app.js",
   "scripts": {
+    "start": "webpack-dev-server",
     "production": "webpack -p",
-    "start": "webpack-dev-server"
+    "deploy": "./deploy"
   },
   "author": "Yvonne Ng",
   "license": "ISC",

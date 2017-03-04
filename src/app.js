@@ -1,7 +1,8 @@
-var axios = require('axios');
+var React = require('react');
+var ReactDOM = require('react-dom');
+var routes = require('./config/routes');
 
-
-axios.get(process.env.GITHUB_API_URL + '/search/repositories?q=test')
-	.then(function(repos){
-		console.log('repos', repos)
-	})
+ReactDOM.render(
+	routes,
+	document.getElementById('app')
+);
