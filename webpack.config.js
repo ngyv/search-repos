@@ -20,7 +20,9 @@ module.exports = {
 	},
 	module: {
 		loaders: [
-			{test: /\.js$/, exclude: /node_modules/, loader: "babel-loader"},
+			{test: /\.js$/, exclude: /node_modules/, loader: "babel-loader", query: {
+                presets: ["es2015"]
+            }},
 			{test: /\.less/, loaders: ['style-loader', 'css-loader?importLoaders=1&modules&localIdentName=[local]---[hash:base64:5]', 'less-loader?sourceMap=true']}
 		]
 	},

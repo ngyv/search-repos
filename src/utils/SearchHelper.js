@@ -14,12 +14,24 @@ function convertParamString (paramsObj) {
 
 
 var SearchHelper = {
-	getRepos: function (keyword) {
-		var url = process.env.GITHUB_API_URL + githubReposPath + convertParamString({ q : keyword })
-		axios.get(url)
-			.then(function(repos){
-				console.log('repos', repos)
+	getRepos: function (keyword, page, numResultsPerPage) {
+		page = page || 1;
+		numResultsPerPage = numResultsPerPage || 30;
+		var url = process.env.GITHUB_API_URL + githubReposPath 
+					+ convertParamString({ q : keyword, page: page, per_page : numResultsPerPage, 
+											client_id : process.env.GITHUB_CLIENT_ID, client_secret : process.env.GITHUB_CLIENT_SECRET})
+		console.log('search url', url)
+		return axios.get(url)
+			.then(function(data) {
+				if(data.status / 100 === 2) {
+					return Object.assign(data.data, {ok: true})
+				} else {
+					return { ok: false, status: data.status, statusText: data.statusText }
+				}
 			})
+			.catch(function(err) {
+				console.error('Error getting repos', err);
+			});
 	}
 };
 
