@@ -17,7 +17,7 @@ function onChangeKeyword(keyword) {
 		})
 	}
 	
-	fetchRepos(keyword).then((repos) => {
+	fetchRepos(keyword).then((function(repos) {
 		console.log('Result', repos);
 
 		if(repos.ok) { 
@@ -34,7 +34,7 @@ function onChangeKeyword(keyword) {
 				isLoading: false
 			})
 		}
-	})
+	}).bind(this))
 }
 
 // just retain whatever is relevant
@@ -43,8 +43,8 @@ function getRelevantInfo (repos) {
  	var relevantKeys = ['id', 'owner', 'name', 'language', 'watchers', 'url', 'description'];
 	var skinnyRepo = [];
 
-	repos.map((repo) => {
-		skinnyRepo.push(relevantKeys.reduce((skinny, key) => {
+	repos.map(function (repo) {
+		skinnyRepo.push(relevantKeys.reduce(function (skinny, key) {
 			skinny[key] = repo[key];
 			return skinny;
 		}, {}))
@@ -65,7 +65,9 @@ var SearchReposContainer = React.createClass({
 	getInitialState: function () {
 		return {
 			keyword: '',
-			isLoading: false
+			repos: [],
+			isLoading: false,
+			showRepoId: null
 		}
 	},
 	componentDidMount: function () {
@@ -83,10 +85,13 @@ var SearchReposContainer = React.createClass({
 		}
 	},
 	handleClickHome: function (event) {
-		console.log('home')
 		if(this.props.location.pathname !== '/') {
 			this.setState({
-				keyword: ''
+				keyword: '',
+				repos: [],
+				total: undefined,
+				incomplete: undefined,
+				isLoading: false
 			})
 			this.context.router.push({
 				pathname: '/'
@@ -120,14 +125,23 @@ var SearchReposContainer = React.createClass({
 			onChangeKeyword.bind(this)(keyword);
 		}
 	},
+	handleClickResult: function (repoId) {
+		return (function (event) {
+			var prev = this.state.showRepoId;
+			this.setState({
+				showRepoId: prev === repoId ? null : repoId
+			})
+		}).bind(this)
+	},
 	render: function () {
 		return (
 				<SearchRepos keyword={this.state.keyword} onClickHome={this.handleClickHome} 
 					onSearchInputFocus={this.handleSearchInputFocus} onSearchInputBlur={this.handleSearchInputBlur}
 					onSearchInputChange={this.handleSearchInputChange} onSearchButtonClick={this.handleSearchButtonClick}>
 
-					{!this.state.isLoading && this.state.repos && this.state.repos.length && 
-						<SearchReposResult repos={this.state.repos} total={this.state.total} incomplete={this.state.incomplete}/>}
+					{!this.state.isLoading && this.state.repos && this.state.repos.length > 0 && 
+						<SearchReposResult repos={this.state.repos} total={this.state.total} incomplete={this.state.incomplete}
+							onClickResult={this.handleClickResult} showRepoId={this.state.showRepoId} />}
 					{this.state.isLoading && 
 						<SearchingRepos />}
 				</SearchRepos>

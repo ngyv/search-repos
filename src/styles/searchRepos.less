@@ -8,6 +8,7 @@ section {
 	overflow: hidden;
 }
 
+
 .searchContainer {
 	text-align: center;
 }
@@ -37,6 +38,21 @@ section {
 	}
 }
 
+.resultRow {
+	cursor: pointer;
+	margin-bottom: 10px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	border-radius: 10px;
+
+	&:hover {
+		background-color: #fafbfc;
+	}
+}
+
 .resultOwnerImg {
-	height: 100%;
+	height: 150px;
+	@media screen and (max-width: 480px) {
+		height: 100px;
+	}
 }
