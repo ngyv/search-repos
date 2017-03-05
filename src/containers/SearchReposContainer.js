@@ -21,45 +21,31 @@ function onChangeKeyword(keyword, page) {
 		})
 	}
 	
-	fetchRepos(keyword, page).then((function(repos) {
-		console.log('Result', repos);
-
-		if(repos.ok) { 
-			var skinnyRepo = getRelevantInfo(repos.items);
-			this.setState({
-				repos: skinnyRepo,
-				total: repos.total_count,
-				incomplete: repos.incomplete_results,
-				isLoading: false,
-				page: page ? parseInt(page) : 1
-			})
-		} else {
-			// TODO: handle failure
-			this.setState({
-				isLoading: false
-			})
-		}
-	}).bind(this))
+	fetchRepos.bind(this)(keyword, page);
 }
 
-// just retain whatever is relevant
-function getRelevantInfo (repos) {
-	// NOTE: 'followers' == 'watches' ??
- 	var relevantKeys = ['id', 'owner', 'name', 'language', 'watchers', 'svn_url', 'description'];
-	var skinnyRepo = [];
-
-	repos.map(function (repo) {
-		skinnyRepo.push(relevantKeys.reduce(function (skinny, key) {
-			skinny[key] = repo[key];
-			return skinny;
-		}, {}))
-	})
-	console.log('skinny', skinnyRepo)
-	return skinnyRepo;
+function getErrorMessage (source, apiErrorMsg) {
+	return 'Oops! There seems to be some issue with ' + source + "'s servers. Error: " + apiErrorMsg;
 }
 
 function fetchRepos(keyword, page) {
-	return SearchHelper.getRepos(keyword, page)
+	SearchHelper.fetchRepos(keyword, page).then((function(results){
+		console.log('results', results)
+		if(results.error) {
+			this.setState({
+				isLoading: false,
+				errorMsg: getErrorMessage('GitHub', results.error)
+			})
+		} else if(results.repos) {
+			this.setState({
+				repos: results.repos,
+				total: results.total,
+				incomplete: results.incomplete,
+				isLoading: false,
+				page: page ? page : '1'
+			})
+		}
+	}).bind(this))
 }
 
 
@@ -74,7 +60,7 @@ var SearchReposContainer = React.createClass({
 			repos: [],
 			isLoading: false,
 			showRepoId: null,
-			page: 1
+			page: '1'
 		}
 	},
 	componentDidMount: function () {
@@ -82,12 +68,12 @@ var SearchReposContainer = React.createClass({
 		if(pathname.includes('keyword') && pathname.split('/')[2].length > 0) {
 			var keyword = pathname.split('/')[2];
 			var page = pathname.split('/')[3];
-			console.log('page', page)
+
 			this.setState({
 				keyword: keyword,
-				page: page ? parseInt(page) : 1
+				page: page ? page : '1'
 			})
-			onChangeKeyword.bind(this)(keyword, parseInt(page));
+			onChangeKeyword.bind(this)(keyword, page);
 		} else {
 			this.setState({
 				keyword: ''
@@ -105,7 +91,7 @@ var SearchReposContainer = React.createClass({
 				total: undefined,
 				incomplete: undefined,
 				isLoading: false,
-				page: 1
+				page: '1'
 			})
 			this.context.router.push({
 				pathname: '/'
@@ -156,21 +142,23 @@ var SearchReposContainer = React.createClass({
 		return function (event) {
 			var page = this.state.page;
 			if(event.key === 'Enter' && /^\d+$/.test(page) && page <= max && page >= 1) {
-				onChangeKeyword.bind(this)(this.state.keyword, parseInt(page));
+				onChangeKeyword.bind(this)(this.state.keyword, page);
 			}
 		}.bind(this)
 	},
 	handleClickPage: function(max, page) {
 		return function (event) {
-			if(/^\d+$/.test(page) && page <= max && page >= 1) {
-				onChangeKeyword.bind(this)(this.state.keyword, parseInt(page));
+			if(parseInt(page) <= max && parseInt(page) >= 1) {
+				onChangeKeyword.bind(this)(this.state.keyword, page);
 			}
 		}.bind(this)
 	},
 	handleChangePageInput: function(event) {
-		this.setState({
-			page: parseInt(event.target.value)
-		})
+		if(/^\d+$/.test(event.target.value) || event.target.value.length === 0) {
+			this.setState({
+				page: event.target.value
+			})
+		}
 	},
 	render: function () {
 		return (
@@ -180,12 +168,15 @@ var SearchReposContainer = React.createClass({
 					onSearchInputEnter={this.handleSearchInputEnter} onClickScrollTop={this.scrollToTop} hasResult={this.state.total}>
 
 					{!this.state.isLoading && this.state.repos && this.state.repos.length > 0 && 
-						<SearchReposResult repos={this.state.repos} keyword={this.state.keyword} total={this.state.total} page={this.state.page}
+						<SearchReposResult repos={this.state.repos} keyword={this.state.keyword} total={this.state.total} page={this.state.page.toString()}
 							incomplete={this.state.incomplete} onClickResult={this.handleClickResult} 
 							showRepoId={this.state.showRepoId} onKeyPressInputPage={this.handleGoToPage} 
 							onClickPage={this.handleClickPage} onChangePageInput={this.handleChangePageInput}/>}
 					{this.state.isLoading && 
 						<SearchingRepos />}
+
+					{this.state.errorMsg && 
+						<div className='col-xs-12 col-sm-6 col-sm-offset-3 alert alert-danger'>{this.state.errorMsg}</div>}
 				</SearchRepos>
 		)
 	}

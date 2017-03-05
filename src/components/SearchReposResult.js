@@ -60,7 +60,7 @@ SearchReposResult.propTypes = {
 	onClickResult: PropTypes.func.isRequired,
 	showRepoId: PropTypes.number,
 	keyword: PropTypes.string.isRequired,
-	page: PropTypes.number.isRequired,
+	page: PropTypes.string.isRequired,
 	onKeyPressInputPage: PropTypes.func.isRequired,
 	onClickPage: PropTypes.func.isRequired,
 	onChangePageInput: PropTypes.func.isRequired
