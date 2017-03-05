@@ -7,13 +7,14 @@ var css = require('../styles/searchRepos.less');
 
 function SearchRepos (props) {
 	return (
-		<div className={classnames('container', css.searchContainer)}>
+		<div className={classnames(css.searchContainer)}>
 			<h1 className={classnames(css.searchHome)} onClick={props.onClickHome}>Search Github Repositories</h1>
 
 			<section>
 				<div className={classnames('col-xs-12', 'col-sm-6','col-sm-offset-3', css.searchForm)}>
 					<input className={classnames('form-control')} placeholder='Search by keyword' value={props.keyword} 
-						onFocus={props.onSearchInputFocus} onBlur={props.onSearchInputBlur} onChange={props.onSearchInputChange}/>
+						onFocus={props.onSearchInputFocus} onBlur={props.onSearchInputBlur} onChange={props.onSearchInputChange}
+						onKeyPress={props.onSearchInputEnter}/>
 					<div className='col-xs-12 col-sm-6 col-sm-offset-3'>
 						<button className={classnames('form-control', css.searchBtn)} onClick={props.onSearchButtonClick}>Search</button>
 					</div>
@@ -22,6 +23,9 @@ function SearchRepos (props) {
 			<section>
 				{props.children}
 			</section>
+			<div className={classnames(css.stickyToTop, props.hasResult ? css.show : '')} onClick={props.onClickScrollTop}>
+				TO TOP
+			</div>
 		</div>
 	)
 }
@@ -32,7 +36,10 @@ SearchRepos.propTypes = {
 	onSearchInputFocus: PropTypes.func.isRequired,
 	onSearchInputBlur: PropTypes.func.isRequired,
 	onSearchInputChange: PropTypes.func.isRequired,
-	onSearchButtonClick: PropTypes.func.isRequired
+	onSearchInputEnter: PropTypes.func.isRequired,
+	onSearchButtonClick: PropTypes.func.isRequired,
+	onClickScrollTop: PropTypes.func.isRequired,
+	hasResult: PropTypes.number
 }
 
 

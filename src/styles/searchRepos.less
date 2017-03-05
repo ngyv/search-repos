@@ -8,9 +8,53 @@ section {
 	overflow: hidden;
 }
 
+// Screen breakpoints
+@screen-xxs: 320px; // iPhone 4, 5
+@screen-xs: 480px;
+@screen-xs-max: 767px;
+@screen-sm-min: 768px;
+@screen-sm-max: 991px;
+@screen-md-min: 992px;
+@screen-lg-min: 1200px;
+
+.stickyToTop {
+	position: fixed;
+	right: 15px;
+	bottom: 15px;
+	cursor: pointer;
+	border-radius: 5px;
+	padding: 5px 10px;
+	transition: background 0.4s ease;
+	display: none;
+
+	&:hover {
+		background: black;
+		color: white;
+	}
+	&.show {
+		display: block;
+	}
+}
 
 .searchContainer {
+	margin-top: 50px;
 	text-align: center;
+
+	@media screen and (max-width: @screen-xs-max) {
+		margin-top: 20px;
+	}
+
+	&.stickyForm {
+		.searchForm {
+			position: fixed;
+		    top: 0;
+		    left: 0;
+		    z-index: 11;
+		}
+		.searchResults {
+			margin-top: 95px;
+		}
+	}
 }
 
 .searchHome {
@@ -23,6 +67,10 @@ section {
 
 	input {
 		text-align: center;
+
+		@media screen and (max-width: @screen-xs-max) {
+			font-size: 16px; // to avoid the annoying zoom for mobile
+		}
 	}
 }
 
@@ -31,11 +79,18 @@ section {
 	background: black;
 	text-transform: none;
 	margin-top: 20px;
+	border: 1px solid transparent;
 	transition: background 0.3s ease;
 
 	&:hover {
-		background: darkgrey;
+		background: white;
+		color: black;
+		border-color: black;
 	}
+}
+
+.searchResults {
+	overflow: hidden;
 }
 
 .resultRow {
@@ -45,14 +100,36 @@ section {
 	padding-bottom: 10px;
 	border-radius: 10px;
 
-	&:hover {
+	&:hover, &.inFocus {
 		background-color: #fafbfc;
 	}
 }
 
 .resultOwnerImg {
 	height: 150px;
-	@media screen and (max-width: 480px) {
+	margin-bottom: 10px;
+	@media screen and (max-width: @screen-xs) {
 		height: 100px;
+	}
+}
+
+.resultDetails {
+	background-color: #f3f6f9;
+	margin-top: 10px;
+}
+
+.pagination {
+	overflow: hidden;
+	margin: 20px 0;
+	
+	.paginationInput {
+		text-align: center;
+	}
+	.paginationButton {
+		background: white;
+		color: black;
+		border: 1px solid black;
+		border-radius: 5px;
+		margin: 0 5px;
 	}
 }

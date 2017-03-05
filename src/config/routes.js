@@ -10,7 +10,8 @@ var SearchReposContainer = require('../containers/SearchReposContainer');
 var routes = (
 	<Router history={hashHistory}>
 		<Route path='/' component={SearchReposContainer}></Route>
-		<Route path='search/:keyword' component={SearchReposContainer}></Route>
+		<Route path='keyword/:keyword' component={SearchReposContainer}></Route>
+		<Route path='keyword/:keyword/:page' component={SearchReposContainer}></Route>
 	</Router>
 );
 
