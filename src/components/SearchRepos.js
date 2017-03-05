@@ -8,6 +8,7 @@ var css = require('../styles/searchRepos.less');
 function SearchRepos (props) {
 	return (
 		<div className={classnames(css.searchContainer)}>
+			<div><a className={classnames(css.sourceLink)} href='https://github.com/ngyv/search-repos'>Source</a></div>
 			<h1 className={classnames(css.searchHome)} onClick={props.onClickHome}>Search Github Repositories</h1>
 
 			<section>
