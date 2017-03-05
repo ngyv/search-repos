@@ -34,6 +34,10 @@ section {
 	&.show {
 		display: block;
 	}
+
+	@media screen and (max-width: @screen-xs) {
+		bottom: 55px;
+	}
 }
 
 .searchContainer {
@@ -124,8 +128,10 @@ section {
 	
 	.paginationInput {
 		text-align: center;
+		height: 30px;
 	}
 	.paginationButton {
+		height: 30px;
 		background: white;
 		color: black;
 		border: 1px solid black;

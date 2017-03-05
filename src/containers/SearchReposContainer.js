@@ -30,7 +30,8 @@ function onChangeKeyword(keyword, page) {
 				repos: skinnyRepo,
 				total: repos.total_count,
 				incomplete: repos.incomplete_results,
-				isLoading: false
+				isLoading: false,
+				page: page ? parseInt(page) : 1
 			})
 		} else {
 			// TODO: handle failure
