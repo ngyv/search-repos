@@ -29,7 +29,7 @@ function getErrorMessage (source, apiErrorMsg) {
 }
 
 function fetchRepos(keyword, page) {
-	SearchHelper.fetchRepos(keyword, page).then((function(results){
+	SearchHelper.fetchReposByKeyword(keyword, page).then((function(results){
 		console.log('results', results)
 		if(results.error) {
 			this.setState({
@@ -42,7 +42,7 @@ function fetchRepos(keyword, page) {
 				total: results.total,
 				incomplete: results.incomplete,
 				isLoading: false,
-				page: page ? page : '1'
+				page: page ? parseInt(page) : '1'
 			})
 		}
 	}).bind(this))
@@ -71,7 +71,7 @@ var SearchReposContainer = React.createClass({
 
 			this.setState({
 				keyword: keyword,
-				page: page ? page : '1'
+				page: page ? parseInt(page) : '1'
 			})
 			onChangeKeyword.bind(this)(keyword, page);
 		} else {
@@ -130,12 +130,20 @@ var SearchReposContainer = React.createClass({
 			onChangeKeyword.bind(this)(keyword);
 		}
 	},
-	handleClickResult: function (repoId) {
+	handleClickResult: function (repoId, userName, repoName, language, description, url, watchersTotal) {
 		return (function (event) {
-			var prev = this.state.showRepoId;
-			this.setState({
-				showRepoId: prev === repoId ? null : repoId
-			})
+			this.context.router.push({
+		      	pathname: '/repos/' + repoId,
+		      	state: {
+		        	userName: userName,
+		        	repoName: repoName,
+		        	language: language,
+		        	description: description,
+		        	url: url,
+		        	watchersTotal: watchersTotal,
+		        	keyword: this.state.keyword
+		      	}
+		    })
 		}).bind(this)
 	},
 	handleGoToPage: function (max) {
@@ -148,15 +156,15 @@ var SearchReposContainer = React.createClass({
 	},
 	handleClickPage: function(max, page) {
 		return function (event) {
-			if(parseInt(page) <= max && parseInt(page) >= 1) {
+			if(page <= max && page >= 1) {
 				onChangeKeyword.bind(this)(this.state.keyword, page);
 			}
 		}.bind(this)
 	},
 	handleChangePageInput: function(event) {
-		if(/^\d+$/.test(event.target.value) || event.target.value.length === 0) {
+		if(/^\d+$/.test(page) || event.target.value.length === 0) {
 			this.setState({
-				page: event.target.value
+				page: event.target.value.length ? parseInt(event.target.value) : undefined
 			})
 		}
 	},
@@ -168,7 +176,7 @@ var SearchReposContainer = React.createClass({
 					onSearchInputEnter={this.handleSearchInputEnter} onClickScrollTop={this.scrollToTop} hasResult={this.state.total}>
 
 					{!this.state.isLoading && this.state.repos && this.state.repos.length > 0 && 
-						<SearchReposResult repos={this.state.repos} keyword={this.state.keyword} total={this.state.total} page={this.state.page.toString()}
+						<SearchReposResult repos={this.state.repos} keyword={this.state.keyword} total={this.state.total} page={this.state.page}
 							incomplete={this.state.incomplete} onClickResult={this.handleClickResult} 
 							showRepoId={this.state.showRepoId} onKeyPressInputPage={this.handleGoToPage} 
 							onClickPage={this.handleClickPage} onChangePageInput={this.handleChangePageInput}/>}

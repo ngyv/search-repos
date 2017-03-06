@@ -8,6 +8,19 @@ section {
 	overflow: hidden;
 }
 
+.flexContainer {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap; // if you don't mind having more than 1 row
+	align-content: flex-start;
+	align-items: flex-start;
+	justify-content: flex-start;
+}
+.flexItem {
+	padding: 10px 15px;
+	overflow: hidden;
+}
+
 // Screen breakpoints
 @screen-xxs: 320px; // iPhone 4, 5
 @screen-xs: 480px;
@@ -106,11 +119,10 @@ section {
 	overflow: hidden;
 }
 
-.resultRow {
+.resultBox {
 	cursor: pointer;
-	margin-bottom: 10px;
-	padding-top: 10px;
-	padding-bottom: 10px;
+	padding: 10px;
+	margin: 5px;
 	border-radius: 10px;
 
 	&:hover, &.inFocus {
