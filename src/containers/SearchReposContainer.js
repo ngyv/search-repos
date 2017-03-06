@@ -133,7 +133,7 @@ var SearchReposContainer = React.createClass({
 	handleClickResult: function (repoId, userName, repoName, language, description, url, watchersTotal) {
 		return (function (event) {
 			this.context.router.push({
-		      	pathname: '/repos/' + repoId,
+		      	pathname: '/id/' + repoId,
 		      	state: {
 		        	userName: userName,
 		        	repoName: repoName,

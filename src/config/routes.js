@@ -14,7 +14,7 @@ var routes = (
 		<Route path='keyword/:keyword' component={SearchReposContainer}></Route>
 		<Route path='keyword/:keyword/:page' component={SearchReposContainer}></Route>
 
-		<Route path='repos/:repoId' component={SearchReposResultDetailContainer}></Route>
+		<Route path='id/:repoId' component={SearchReposResultDetailContainer}></Route>
 	</Router>
 );
 

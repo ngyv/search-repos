@@ -1,13 +1,14 @@
 var React = require('react');
 var PropTypes = React.PropTypes;
+var Link = require('react-router').Link;
 var classnames = require('classnames');
 var css = require('../styles/searchRepos.less');
 
 function constructWatcher (watcher) {
 	return (
-		<div key={watcher.login}>
+		<li key={watcher.login}>
 			<a href={watcher.html_url}>{watcher.login}</a>
-		</div>
+		</li>
 	)
 }
 
@@ -17,15 +18,24 @@ function constructWatchersList (watchers) {
 
 function SearchReposResultDetail (props) {
 	return (
-		<div className={classnames(css.resultDetails)}>
-			<div>Username: {props.userName}</div>
-			<div>Repository: {props.repoName}</div>
-			<div>Language: {props.language}</div>
-			<div>Watchers: { constructWatchersList(props.watchers) }</div>
-			<div>Url: <a href={props.url}>{props.url}</a></div>
-			<div>Description: {props.description}</div>
-			<div>
-				   
+		<div>
+			<div className={classnames(css.resultDetailsTop)}>
+				<Link to={props.keyword ? '/keyword/'+props.keyword : '/'}>
+					<span className={classnames('glyphicon glyphicon-menu-left', css.glyphicon)}></span>Search
+					{props.keyword ? ' "' + props.keyword + '"' : ''}
+				</Link>
+			</div>
+			<div className={classnames(css.resultDetails)}>
+				<div className={classnames('col-xs-12', 'col-sm-6', 'col-sm-offset-3', css.resultDetailsInner)}>
+					<h2>{props.userName} / {props.repoName}</h2>
+					<div>Language: {props.language}</div>
+					<ul>Watchers: { constructWatchersList(props.watchers) }</ul>
+					<div>Url: <a href={props.url}>{props.url}</a></div>
+					<div>Description: {props.description}</div>
+					<div>
+				</div>
+					   
+				</div>
 			</div>
 		</div>
 	)
