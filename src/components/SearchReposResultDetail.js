@@ -38,6 +38,8 @@ function SearchReposResultDetail (props) {
 				<div className={classnames('col-xs-12', 'col-sm-6', 'col-sm-offset-3', css.resultDetailsInner)}>
 					<h2>{props.userName} / {props.repoName}</h2>
 					<div>Language: {props.language}</div>
+					<div>Url: <a href={props.url}>{props.url}</a></div>
+					
 					<div className={classnames(css.watchersContainer)}>
 						Watchers: {props.watchers && props.watchers.length ?  props.watchers.length + ' of ' + props.watchersTotal : ''}
 						{	
@@ -49,10 +51,7 @@ function SearchReposResultDetail (props) {
 								<div className={classnames(css.viewMoreWatchers)} onClick={props.onClickViewMore(parseInt(props.page) + 1, getLastPage(props.watchersTotal, 30))}>View more</div>
 						}
 					</div>
-					<div>Url: <a href={props.url}>{props.url}</a></div>
 					<div>Description: {props.description}</div>
-					<div>
-				</div>
 					   
 				</div>
 			</div>

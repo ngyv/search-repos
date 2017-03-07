@@ -39,7 +39,7 @@ function fetchRepos(keyword, page) {
 				total: results.total,
 				incomplete: results.incomplete,
 				isLoading: false,
-				page: page ? parseInt(page) : '1'
+				page: page ? page : '1'
 			})
 		}
 	}).bind(this))
@@ -173,7 +173,7 @@ var SearchReposContainer = React.createClass({
 					onSearchInputEnter={this.handleSearchInputEnter} onClickScrollTop={this.scrollToTop} hasResult={this.state.total}>
 
 					{!this.state.isLoading && this.state.repos && this.state.repos.length > 0 && 
-						<SearchReposResult repos={this.state.repos} keyword={this.state.keyword} total={this.state.total} page={this.state.page}
+						<SearchReposResult repos={this.state.repos} keyword={this.state.keyword} total={this.state.total} page={this.state.page.toString()}
 							incomplete={this.state.incomplete} onClickResult={this.handleClickResult} 
 							showRepoId={this.state.showRepoId} onKeyPressInputPage={this.handleGoToPage} 
 							onClickPage={this.handleClickPage} onChangePageInput={this.handleChangePageInput}/>}
