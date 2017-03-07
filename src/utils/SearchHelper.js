@@ -15,6 +15,14 @@ function convertParamString (paramsObj) {
 	return paramsStr;
 }
 
+function processDataRetrieved (data) {
+	if(data.status / 100 === 2) {
+		return Object.assign(data.data, {ok: true})
+	} else {
+		return { ok: false, status: data.status, statusText: data.statusText }
+	}
+}
+
 function getSearchReposByKeywordPromise (keyword, page, numResultsPerPage) {
 	page = page || 1;
 	var url = process.env.GITHUB_API_URL + githubReposPath 
@@ -22,13 +30,7 @@ function getSearchReposByKeywordPromise (keyword, page, numResultsPerPage) {
 										client_id : process.env.GITHUB_CLIENT_ID, client_secret : process.env.GITHUB_CLIENT_SECRET})
 	console.log('search repos by keyword url', url)
 	return axios.get(url)
-		.then(function (data) {
-			if(data.status / 100 === 2) {
-				return Object.assign(data.data, {ok: true})
-			} else {
-				return { ok: false, status: data.status, statusText: data.statusText }
-			}
-		})
+		.then(processDataRetrieved)
 		.catch(function (err) {
 			return { ok: false, statusText: err}
 		});
@@ -39,14 +41,7 @@ function getSearchRepoByIdPromise (repoId) {
 				+ convertParamString({ client_id : process.env.GITHUB_CLIENT_ID, client_secret : process.env.GITHUB_CLIENT_SECRET})
 	console.log('search repo by id url', url);
 	return axios.get(url)
-		.then(function (data) { 
-			// console.debug('repo data handle this', data);
-			if(data.status / 100 === 2) {
-				return Object.assign(data.data, {ok: true})
-			} else {
-				return { ok: false, status: data.status, statusText: data.statusText }
-			}
-		})
+		.then(processDataRetrieved)
 		.catch(function (err) {
 			return { ok: false, statusText: err}
 		})
@@ -59,14 +54,7 @@ function getSearchRepoWatchersByIdPromise (repoId, page, numResultsPerPage) {
 										client_id : process.env.GITHUB_CLIENT_ID, client_secret : process.env.GITHUB_CLIENT_SECRET})
 	console.log('search repo watchers by id url', url);
 	return axios.get(url)
-		.then(function (data) {
-			// console.debug('watchers data handle this', data);
-			if(data.status / 100 === 2) {
-				return Object.assign(data.data, {ok: true})
-			} else {
-				return { ok: false, status: data.status, statusText: data.statusText }
-			}
-		})
+		.then(processDataRetrieved)
 		.catch(function (err) {
 			return { ok: false, statusText: err}
 		})
@@ -131,7 +119,6 @@ var SearchHelper = {
 
 			if(repo.ok) { 
 				return getRelevantInfo(repo, relevantKeys)
-				
 			} else {
 				return {
 					error: repo.statusText
@@ -151,6 +138,10 @@ var SearchHelper = {
 				}
 			}
 		})
+	},
+	getErrorMessage: function getErrorMessage (source, apiErrorMsg) {
+		var generic = 'Oops! There seems to be some issue fetching the data from ' + source + "'s servers.";
+		return apiErrorMsg ? generic + ' "' + apiErrorMsg + '"' : generic;
 	}
 };
 

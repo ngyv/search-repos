@@ -8,7 +8,7 @@ var LazyLoad = require('react-lazy-load').default;
 
 function contructResult (result) {
 	return (
-		<div key={result.id} className={classnames(css.flexItem, 'col-xs-12', 'col-sm-6','col-md-4')}>
+		<div key={result.id} className={classnames(css.flexItem, 'col-xs-12', 'col-sm-6','col-md-4', 'col-xl-3')}>
 			<LazyLoad offsetVertical={200} >
 				<div className={classnames(css.resultBox, this.showRepoId === result.id ? css.inFocus : '')} 
 					onClick={this.onClickResult(result.id, result.ownerlogin, result.name, result.language, result.description, result.svn_url, result.watchers)} >

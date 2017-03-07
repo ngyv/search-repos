@@ -16,17 +16,24 @@ function fetchRepoInfoById (repoId, page) {
 		.then(axios.spread((function (repo, watchers) {
 			console.log('[concurrent] fetchRepoInfoById repo', repo)
 			console.log('[concurrent] fetchRepoInfoById watchers', watchers)
-			this.setState({
-				userName: repo.ownerlogin,
-				repoName: repo.name,
-				keyword: repo.keyword,
-				language: repo.language,
-				description: repo.description,
-				url: repo.svn_url,
-				page: page ? page : '1',
-				watchers: watchers,
-				watchersTotal: repo.watchers
-			})
+			if(repo.error || watchers.error) {
+				this.setState({
+					errorMsg: SearchHelper.getErrorMessage('GitHub')
+				})
+			} else {
+				this.setState({
+					userName: repo.ownerlogin,
+					repoName: repo.name,
+					keyword: repo.keyword,
+					language: repo.language,
+					description: repo.description,
+					url: repo.svn_url,
+					page: page ? page : '1',
+					watchers: watchers,
+					watchersTotal: repo.watchers
+				})
+			}
+			
 		}).bind(this)).bind(this))
 }
 
@@ -34,10 +41,16 @@ function fetchRepoWatchersById (repoId, page) {
 	SearchHelper.fetchRepoWatchersByRepoId(repoId, page)
 		.then((function (watchers) {
 			console.log('fetchRepoWatchersById watchers', watchers)
-			var currentWatchers = this.state.watchers;
-			this.setState({
-				watchers: currentWatchers && currentWatchers.length ? currentWatchers.concat(watchers) : watchers
-			})
+			if(watchers.error) {
+				this.setState({
+					errorMsg: SearchHelper.getErrorMessage('GitHub')
+				})
+			} else {
+				var currentWatchers = this.state.watchers;
+				this.setState({
+					watchers: currentWatchers && currentWatchers.length ? currentWatchers.concat(watchers) : watchers
+				})
+			}
 		}).bind(this))
 }
 
@@ -102,8 +115,10 @@ var SearchReposResultDetailContainer = React.createClass({
 	render: function () {
 		return (
 			<SearchReposResultDetail userName={this.state.userName} repoName={this.state.repoName} keyword={this.state.keyword}
-				language={this.state.language} description={this.state.description} url={this.state.url} page={this.state.page} 
-				watchers={this.state.watchers} watchersTotal={this.state.watchersTotal} onClickViewMore={this.handleClickViewMore}/>
+					language={this.state.language} description={this.state.description} url={this.state.url} page={this.state.page} 
+					watchers={this.state.watchers} watchersTotal={this.state.watchersTotal} onClickViewMore={this.handleClickViewMore}
+					errorMsg={this.state.errorMsg}/>
+
 		)
 	}
 });

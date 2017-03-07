@@ -24,9 +24,6 @@ function onChangeKeyword(keyword, page) {
 	fetchRepos.bind(this)(keyword, page);
 }
 
-function getErrorMessage (source, apiErrorMsg) {
-	return 'Oops! There seems to be some issue with ' + source + "'s servers. Error: " + apiErrorMsg;
-}
 
 function fetchRepos(keyword, page) {
 	SearchHelper.fetchReposByKeyword(keyword, page).then((function(results){
@@ -34,7 +31,7 @@ function fetchRepos(keyword, page) {
 		if(results.error) {
 			this.setState({
 				isLoading: false,
-				errorMsg: getErrorMessage('GitHub', results.error)
+				errorMsg: SearchHelper.getErrorMessage('GitHub')
 			})
 		} else if(results.repos) {
 			this.setState({

@@ -29,16 +29,25 @@ function SearchReposResultDetail (props) {
 					{props.keyword ? ' "' + props.keyword + '"' : ''}
 				</Link>
 			</div>
+
 			<div className={classnames(css.resultDetails)}>
+				{props.errorMsg && 
+						<div className='col-xs-12 col-sm-6 col-sm-offset-3 alert alert-danger' style={{marginTop: '10px'}}>{props.errorMsg}</div>}
+
+
 				<div className={classnames('col-xs-12', 'col-sm-6', 'col-sm-offset-3', css.resultDetailsInner)}>
 					<h2>{props.userName} / {props.repoName}</h2>
 					<div>Language: {props.language}</div>
-					<div className={classnames(css.watchersContainer)}>Watchers: {props.watchers ? props.watchers.length + ' of ' + props.watchersTotal : ''}
-						<ul className={classnames(css.watchersList)}>{ constructWatchersList(props.watchers) }</ul>
-						
-						{props.page < getLastPage(props.watchersTotal, 30) && 
-							<div className={classnames(css.viewMoreWatchers)} onClick={props.onClickViewMore(parseInt(props.page) + 1, getLastPage(props.watchersTotal, 30))}>View more</div>}
-
+					<div className={classnames(css.watchersContainer)}>
+						Watchers: {props.watchers && props.watchers.length ?  props.watchers.length + ' of ' + props.watchersTotal : ''}
+						{	
+							props.watchers && props.watchers.length &&
+								<ul className={classnames(css.watchersList)}>{ constructWatchersList(props.watchers) }</ul>	
+						}
+						{
+							props.page < getLastPage(props.watchersTotal, 30) && 
+								<div className={classnames(css.viewMoreWatchers)} onClick={props.onClickViewMore(parseInt(props.page) + 1, getLastPage(props.watchersTotal, 30))}>View more</div>
+						}
 					</div>
 					<div>Url: <a href={props.url}>{props.url}</a></div>
 					<div>Description: {props.description}</div>
@@ -61,7 +70,8 @@ SearchReposResultDetail.propsTypes = {
 	watchers: PropTypes.array.isRequired,
 	watchersTotal: PropTypes.number.isRequired,
 	page: PropTypes.string.isRequired,
-	onClickViewMore: PropTypes.func.isRequired
+	onClickViewMore: PropTypes.func.isRequired,
+	errorMsg: PropTypes.string
 }
 
 
