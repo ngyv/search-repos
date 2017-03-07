@@ -4,7 +4,7 @@ var axios = require('axios');
 var githubReposPath = '/search/repositories'; // e.g. var url = process.env.GITHUB_API_URL + '/search/repositories?q=test'
 var githubRepoByIdPath = function(repoId) { return '/repositories/' + repoId } // e.g. var url = process.env.GITHUB_API_URL + '/repositories/:repoId'
 // var githubRepoWatchersByNamePath = function(userName, repoName) { return '/'+ userName +'/'+ repoName + '/subscribers' }; // e.g. var url = process.env.GITHUB_API_URL + '/repos/facebook/react/subscribers'
-var githubRepoWatchersByIdPath = function(repoId) { return githubRepoByIdPath(repoId) + '/subscribers' };  // e.g. var url = process.env.GITHUB_API_URL + '/repositories/10270250/subscribers'
+var githubRepoWatchersByIdPath = function(repoId) { return githubRepoByIdPath(repoId) + '/watchers' };  // e.g. var url = process.env.GITHUB_API_URL + '/repositories/10270250/subscribers'
 
 function convertParamString (paramsObj) {
 	var paramsStr = '';

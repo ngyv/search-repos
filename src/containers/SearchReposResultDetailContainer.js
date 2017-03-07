@@ -34,8 +34,9 @@ function fetchRepoWatchersById (repoId, page) {
 	SearchHelper.fetchRepoWatchersByRepoId(repoId, page)
 		.then((function (watchers) {
 			console.log('fetchRepoWatchersById watchers', watchers)
+			var currentWatchers = this.state.watchers;
 			this.setState({
-				watchers: watchers
+				watchers: currentWatchers && currentWatchers.length ? currentWatchers.concat(watchers) : watchers
 			})
 		}).bind(this))
 }
@@ -65,6 +66,7 @@ var SearchReposResultDetailContainer = React.createClass({
 				fetchRepoWatchersById.bind(this)(repoId)
 
 				this.setState({
+					repoId: repoId,
 					userName: this.props.location.state.userName,
 					repoName: this.props.location.state.repoName,
 					keyword: this.props.location.state.keyword,
@@ -72,7 +74,7 @@ var SearchReposResultDetailContainer = React.createClass({
 					description: this.props.location.state.description,
 					url: this.props.location.state.url,
 					page: page ? page : '1',
-					watchersTotal: this.props.location.state.watchers
+					watchersTotal: this.props.location.state.watchersTotal
 				})
 			} else { // when user refreshed page, state is lost
 				
@@ -87,11 +89,21 @@ var SearchReposResultDetailContainer = React.createClass({
 		    })
 		}
 	},
+	handleClickViewMore: function(page, max) {
+		return function (event) {
+			if(page <= max && page >= 1) {
+				this.setState({
+					page: page
+				})
+				fetchRepoWatchersById.bind(this)(this.state.repoId, page)
+			}
+		}.bind(this)
+	},
 	render: function () {
 		return (
 			<SearchReposResultDetail userName={this.state.userName} repoName={this.state.repoName} keyword={this.state.keyword}
 				language={this.state.language} description={this.state.description} url={this.state.url} page={this.state.page} 
-				watchers={this.state.watchers} watchersTotal={this.state.watchersTotal} />
+				watchers={this.state.watchers} watchersTotal={this.state.watchersTotal} onClickViewMore={this.handleClickViewMore}/>
 		)
 	}
 });

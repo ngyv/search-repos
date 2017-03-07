@@ -4,7 +4,7 @@
   "description": "Application that searches repositories using a keyword",
   "main": "app.js",
   "scripts": {
-    "start": "webpack-dev-server",
+    "start": "webpack-dev-server --port 4000",
     "production": "webpack -p",
     "deploy": "./deploy"
   },

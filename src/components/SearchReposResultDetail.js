@@ -16,6 +16,10 @@ function constructWatchersList (watchers) {
 	return watchers ? watchers.map(constructWatcher) : ''
 }
 
+function getLastPage (total, perPage) {
+	return Math.ceil(total * 1.0 / perPage)
+}
+
 function SearchReposResultDetail (props) {
 	return (
 		<div>
@@ -29,7 +33,13 @@ function SearchReposResultDetail (props) {
 				<div className={classnames('col-xs-12', 'col-sm-6', 'col-sm-offset-3', css.resultDetailsInner)}>
 					<h2>{props.userName} / {props.repoName}</h2>
 					<div>Language: {props.language}</div>
-					<ul>Watchers: { constructWatchersList(props.watchers) }</ul>
+					<div className={classnames(css.watchersContainer)}>Watchers: {props.watchers ? props.watchers.length + ' of ' + props.watchersTotal : ''}
+						<ul className={classnames(css.watchersList)}>{ constructWatchersList(props.watchers) }</ul>
+						
+						{props.page < getLastPage(props.watchersTotal, 30) && 
+							<div className={classnames(css.viewMoreWatchers)} onClick={props.onClickViewMore(parseInt(props.page) + 1, getLastPage(props.watchersTotal, 30))}>View more</div>}
+
+					</div>
 					<div>Url: <a href={props.url}>{props.url}</a></div>
 					<div>Description: {props.description}</div>
 					<div>
@@ -50,7 +60,8 @@ SearchReposResultDetail.propsTypes = {
 	url: PropTypes.string.isRequired,
 	watchers: PropTypes.array.isRequired,
 	watchersTotal: PropTypes.number.isRequired,
-	page: PropTypes.string.isRequired
+	page: PropTypes.string.isRequired,
+	onClickViewMore: PropTypes.func.isRequired
 }
 
 
